@@ -139,6 +139,41 @@ abstract class Minify
 
         return $this;
     }
+    
+    /**
+     * Add straight-up code to be minified.
+     *
+     * @param string|string[] $data
+     *
+     * @return static
+     */
+    public function addData($data /* $data = null, ... */)
+    {
+        // bogus "usage" of parameter $data: scrutinizer warns this variable is
+        // not used (we're using func_get_args instead to support overloading),
+        // but it still needs to be defined because it makes no sense to have
+        // this function without argument :)
+        $args = array($data) + func_get_args();
+
+        // this method can be overloaded
+        foreach ($args as $data) {
+            if (is_array($data)) {
+                call_user_func_array(array($this, 'addData'), $data);
+                continue;
+            }
+
+            // redefine var
+            $data = (string) $data;
+
+            // replace CR linefeeds etc.
+            $data = str_replace(array("\r\n", "\r"), "\n", $data);
+
+            // store data
+            $this->data[] = $data;
+        }
+
+        return $this;
+    }
 
     /**
      * Minify the data & (optionally) saves it to a file.
