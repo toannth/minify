@@ -627,7 +627,7 @@ body{
         );
         $tests[] = array(
             'p{background: transparent url(images/preloader.gif) no-repeat scroll 50% 50%;}',
-            'p{background:transparent url(images/preloader.gif) no-repeat scroll 50% 50%}',
+            'p{background:#fff0 url(images/preloader.gif) no-repeat scroll 50% 50%}',
         );
 
         // https://github.com/matthiasmullie/minify/issues/191
@@ -858,6 +858,23 @@ margin-left: calc(20px + var(--some-var));
         $tests[] = array(
             'background-position: right 0.8em bottom calc(50% - 5px), right 0.8em top calc(50% - 5px);',
             'background-position:right .8em bottom calc(50% - 5px),right .8em top calc(50% - 5px);',
+        );
+
+        // https://github.com/matthiasmullie/minify/issues/422
+        $tests[] = array(
+            'a {
+                color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
+                text-decoration: none;
+            }
+            a:hover {
+                --bs-link-color-rgb: var(--bs-link-hover-color-rgb);
+            }
+            a:not([href]):not([class]),
+            a:not([href]):not([class]):hover {
+                color: inherit;
+                text-decoration: none;
+            }',
+            'a{color:rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));text-decoration:none}a:hover{--bs-link-color-rgb:var(--bs-link-hover-color-rgb)}a:not([href]):not([class]),a:not([href]):not([class]):hover{color:inherit;text-decoration:none}',
         );
 
         return $tests;
